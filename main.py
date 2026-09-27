@@ -100,7 +100,7 @@ def imprimir_comparacion(mapa, origen, destino):
 
 def abrir_html(mapa, camino, costo, traza, origen, destino, hora):
     """Guarda el reporte en resultado.html y lo abre en el navegador."""
-    html = generar_html(origen, destino, hora, camino, costo,
+    html = generar_html(mapa, origen, destino, hora, camino, costo,
                         resumir_camino(mapa, camino), reglas_del_camino(camino, traza),
                         comparar(mapa, origen, destino))
     archivo = Path(ARCHIVO_HTML).resolve()

@@ -70,7 +70,7 @@ class TestReporteHtml(unittest.TestCase):
         abrir.assert_called_once()
         self.assertIn("Transbordo en Maraya", html)
         self.assertIn("Hora pico aplicada", html)
-        self.assertIn("<svg", html)
+        self.assertIn("Transbordo R1 → R2", html)
 
 
 class TestConMotorReal(unittest.TestCase):

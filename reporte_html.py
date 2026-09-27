@@ -4,78 +4,67 @@ reporte_html.py  -  Resultado de la consulta como página web
 INTEGRANTE 3  |  Lo usa main.py con la opción --html.
 
 Genera un HTML autocontenido (sin librerías externas) con:
-    - el mapa de estaciones dibujado con sus coordenadas reales y la ruta resaltada
-    - la ruta paso a paso, con los transbordos marcados
+    - el recorrido parada por parada, estilo diagrama de metro
+    - la ruta resumida paso a paso, con los transbordos marcados
     - las reglas que se activaron
     - la comparación de nodos revisados: A* contra Dijkstra
 """
-import math
 from html import escape
 
-from kb.conexiones import CONEXIONES
 from kb.estaciones import ESTACIONES
 
 COLORES_RUTA = {"R1": "#e4572e", "R2": "#2e86ab", "R3": "#3bb273"}
-ANCHO, ALTO, MARGEN = 640, 420, 30
 
 
 def _color(ruta):
     return COLORES_RUTA.get(ruta, "#888")
 
 
-def _proyectar():
-    """Convierte lat/lon en coordenadas x/y del dibujo (proyección plana simple)."""
-    lats = [e["lat"] for e in ESTACIONES.values()]
-    lons = [e["lon"] for e in ESTACIONES.values()]
-    lat0 = math.radians(sum(lats) / len(lats))
-    ancho_geo = (max(lons) - min(lons)) * math.cos(lat0)
-    alto_geo = max(lats) - min(lats)
-    escala = min((ANCHO - 2 * MARGEN) / ancho_geo, (ALTO - 2 * MARGEN) / alto_geo)
-    return {
-        id_est: (MARGEN + (e["lon"] - min(lons)) * math.cos(lat0) * escala,
-                 MARGEN + (max(lats) - e["lat"]) * escala)
-        for id_est, e in ESTACIONES.items()
-    }
+def _paradas(mapa, camino):
+    """
+    Convierte el camino de nodos (estacion, ruta) en paradas con el minuto de llegada.
+    Un transbordo no es una parada nueva: se anota en la estación donde ocurre.
+    """
+    paradas = []
+    minuto = 0
+    for anterior, nodo in zip([None] + camino, camino):
+        if anterior is not None:
+            costo = dict(mapa[anterior])[nodo]
+            minuto += costo
+            if anterior[0] == nodo[0]:
+                paradas[-1]["transbordo"] = (anterior[1], nodo[1], costo)
+                continue
+        paradas.append({"estacion": nodo[0], "ruta": nodo[1], "minuto": minuto,
+                        "transbordo": None})
+    return paradas
 
 
-def _mapa_svg(camino):
-    pos = _proyectar()
-    partes = []
-
-    # Fondo: todas las conexiones de la red, tenues.
-    for c in CONEXIONES:
-        (x1, y1), (x2, y2) = pos[c["origen"]], pos[c["destino"]]
-        partes.append(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
-                      f'stroke="{_color(c["ruta"])}" stroke-opacity=".4" stroke-width="3"/>')
-
-    # La ruta elegida, gruesa y del color de cada línea.
-    for (a, ruta), (b, _) in zip(camino, camino[1:]):
-        if a != b:
-            (x1, y1), (x2, y2) = pos[a], pos[b]
-            partes.append(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
-                          f'stroke="{_color(ruta)}" stroke-width="6" stroke-linecap="round"/>')
-
-    en_ruta = {est for est, _ in camino}
-    transbordos = {a for (a, _), (b, _) in zip(camino, camino[1:]) if a == b}
-    origen, destino = camino[0][0], camino[-1][0]
-    for id_est, (x, y) in pos.items():
-        radio = 6 if id_est in en_ruta else 3.5
-        clase = "punto activo" if id_est in en_ruta else "punto"
-        partes.append(f'<circle class="{clase}" cx="{x:.1f}" cy="{y:.1f}" r="{radio}">'
-                      f'<title>{escape(ESTACIONES[id_est]["nombre"])}</title></circle>')
-        if id_est in transbordos:
-            partes.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="11" fill="none" '
-                          f'stroke="#f2a541" stroke-width="3"/>')
-        if id_est in (origen, destino) or id_est in transbordos:
-            partes.append(f'<text class="etiqueta" x="{x + 13:.1f}" y="{y + 4:.1f}">'
-                          f'{escape(ESTACIONES[id_est]["nombre"])}</text>')
-
-    leyenda = "".join(
-        f'<span><i style="background:{color}"></i>{ruta}</span>'
-        for ruta, color in COLORES_RUTA.items())
-    return (f'<svg viewBox="0 0 {ANCHO} {ALTO}" role="img" '
-            f'aria-label="Mapa de la ruta">{"".join(partes)}</svg>'
-            f'<div class="leyenda">{leyenda}<span><i class="anillo"></i>Transbordo</span></div>')
+def _recorrido_html(mapa, camino):
+    paradas = _paradas(mapa, camino)
+    filas = []
+    for i, p in enumerate(paradas):
+        ultima = i == len(paradas) - 1
+        # El color de la línea que baja desde esta parada es el de la ruta del tramo siguiente.
+        color = "transparent" if ultima else _color(paradas[i + 1]["ruta"])
+        nombre = escape(ESTACIONES[p["estacion"]]["nombre"])
+        if i == 0:
+            clase, detalle = "clave", f"Origen · sube a {paradas[1]['ruta'] if len(paradas) > 1 else p['ruta']}"
+        elif ultima:
+            clase, detalle = "clave", "Destino"
+        elif p["transbordo"]:
+            de, a, costo = p["transbordo"]
+            clase, detalle = "clave trans", f"Transbordo {de} → {a} · +{costo:.1f} min"
+        else:
+            clase, detalle = "", ""
+        filas.append(
+            f'<li class="{clase}" style="--c:{color}">'
+            f'<span class="t">{p["minuto"]:.1f}</span><span class="punto"></span>'
+            f'<div><b>{nombre}</b>{f"<small>{detalle}</small>" if detalle else ""}</div></li>')
+    leyenda = "".join(f'<span><i style="background:{c}"></i>{r}</span>'
+                      for r, c in COLORES_RUTA.items())
+    return (f'<ol class="recorrido">{"".join(filas)}</ol>'
+            f'<div class="leyenda">{leyenda}<span><i class="anillo"></i>Transbordo</span>'
+            f'<span>Números: minuto de llegada</span></div>')
 
 
 def _pasos_html(pasos):
@@ -118,7 +107,7 @@ def _comparacion_html(comparacion):
             f'<p class="nota">Mismo tiempo encontrado, {ahorro}% menos nodos revisados gracias a la heurística.</p>')
 
 
-def generar_html(origen, destino, hora, camino, costo, pasos, reglas, comparacion):
+def generar_html(mapa, origen, destino, hora, camino, costo, pasos, reglas, comparacion):
     """Devuelve el HTML completo del reporte como texto."""
     pico = any(r["id"] == "A2" for r in reglas)
     titulo = f'{ESTACIONES[origen]["nombre"]} → {ESTACIONES[destino]["nombre"]}'
@@ -148,20 +137,32 @@ h1 {{ margin:4px 0 0; font-size:clamp(1.5rem, 4vw, 2.2rem); }}
 @media (max-width:820px) {{ .rejilla {{ grid-template-columns:1fr; }} .total {{ text-align:left; }} }}
 section {{ background:var(--tarjeta); border:1px solid var(--borde); border-radius:14px; padding:18px; }}
 h2 {{ margin:0 0 12px; font-size:1rem; color:var(--suave); text-transform:uppercase; letter-spacing:.06em; }}
-svg {{ width:100%; height:auto; display:block; }}
-.punto {{ fill:var(--tarjeta); stroke:var(--suave); stroke-width:1.5; }}
-.punto.activo {{ fill:var(--texto); stroke:var(--tarjeta); stroke-width:2; }}
-.etiqueta {{ font-size:13px; font-weight:700; fill:var(--texto); paint-order:stroke;
-            stroke:var(--tarjeta); stroke-width:4px; }}
+.recorrido {{ list-style:none; margin:0; padding:0; }}
+.recorrido li {{ position:relative; display:grid; grid-template-columns:44px 28px 1fr;
+                align-items:center; min-height:32px; }}
+.recorrido li::before {{ content:""; position:absolute; left:58px; top:50%; height:100%;
+                        width:6px; background:var(--c); }}
+.recorrido .t {{ text-align:right; padding-right:10px; color:var(--suave); font-size:.8rem;
+                font-variant-numeric:tabular-nums; }}
+.recorrido .punto {{ position:relative; z-index:1; justify-self:center; width:12px; height:12px;
+                    border-radius:50%; background:var(--tarjeta); border:3px solid var(--suave); }}
+.recorrido li div {{ color:var(--suave); font-size:.9rem; padding:4px 0; }}
+.recorrido li div b {{ font-weight:500; }}
+.recorrido li.clave div {{ color:var(--texto); font-size:1rem; }}
+.recorrido li.clave div b {{ font-weight:700; }}
+.recorrido li.clave .punto {{ width:18px; height:18px; border-color:var(--texto); }}
+.recorrido li.trans .punto {{ width:22px; height:22px; border:5px solid var(--trans); }}
+.recorrido li small {{ display:block; color:var(--suave); font-size:.82rem; }}
+.recorrido li.trans small {{ color:var(--trans); font-weight:600; }}
 .leyenda {{ display:flex; gap:14px; flex-wrap:wrap; font-size:.85rem; color:var(--suave); margin-top:8px; }}
 .leyenda i {{ display:inline-block; width:14px; height:4px; border-radius:2px; margin-right:6px;
              vertical-align:middle; }}
 .leyenda i.anillo {{ width:12px; height:12px; border:3px solid var(--trans); border-radius:50%; }}
 ol {{ list-style:none; margin:0; padding:0; }}
-ol li {{ display:flex; align-items:center; gap:12px; padding:12px; border-radius:10px;
+.pasos li {{ display:flex; align-items:center; gap:12px; padding:12px; border-radius:10px;
         border-left:5px solid var(--c, var(--trans)); background:var(--fondo); margin-bottom:8px; }}
-ol li div {{ flex:1; min-width:0; }}
-ol li small {{ display:block; color:var(--suave); }}
+.pasos li div {{ flex:1; min-width:0; }}
+.pasos li small {{ display:block; color:var(--suave); }}
 .insignia {{ flex:none; width:40px; height:40px; border-radius:10px; display:grid; place-items:center;
             font-weight:800; color:#fff; background:var(--c, var(--trans)); }}
 .min {{ font-weight:700; white-space:nowrap; }}
@@ -186,9 +187,9 @@ ul li:last-child {{ border-bottom:0; }}
     <span class="chip{' pico' if pico else ''}">{'Hora pico aplicada' if pico else 'Hora valle'}</span></div>
 </header>
 <div class="rejilla">
-  <section><h2>Mapa</h2>{_mapa_svg(camino)}</section>
+  <section><h2>Recorrido</h2>{_recorrido_html(mapa, camino)}</section>
   <div class="columna">
-    <section><h2>Paso a paso</h2><ol>{_pasos_html(pasos)}</ol></section>
+    <section><h2>Paso a paso</h2><ol class="pasos">{_pasos_html(pasos)}</ol></section>
     <section><h2>Reglas activadas</h2><ul>{_reglas_html(reglas)}</ul></section>
     <section><h2>Nodos revisados</h2>{_comparacion_html(comparacion)}</section>
   </div>
