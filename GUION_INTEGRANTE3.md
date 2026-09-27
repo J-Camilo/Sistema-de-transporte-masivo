@@ -52,9 +52,9 @@ python main.py --origen "Parque Olaya" --destino "Egoyá" --hora 07:30 --html
 *Pasar al navegador y recorrerlo de arriba abajo:*
 
 > "**Arriba** está el resultado: 18.2 minutos, en hora pico.
-> En el **mapa**, cada punto es una estación dibujada con sus coordenadas reales. La ruta
-> elegida va en naranja por la R1, hace **transbordo en Maraya**, que es el anillo amarillo, y
-> sigue en azul por la R2 hasta Egoyá.
+> En el **recorrido** está cada parada en orden, como en un mapa de metro, con el minuto en
+> que el bus llega a cada una. La línea naranja es la R1; en Maraya, el anillo amarillo, se hace
+> el **transbordo**, y la línea azul sigue por la R2 hasta Egoyá.
 > En **paso a paso** está lo mismo en tarjetas: 9.8 minutos en R1, más 5 del transbordo y
 > 3.4 en R2.
 > Y aquí están las **reglas** que razonó el motor: D1 dice que es hora pico, A2 sube cada
@@ -86,5 +86,5 @@ python main.py --origen "Parque Olaya" --destino "Egoyá" --hora 10:00 --html
 | ¿Por qué la velocidad máxima y no la promedio, como decía el plan? | Con la promedio, en un tramo rápido h daría más minutos que el tiempo real. Eso sobreestima y A* ya no garantiza la mejor ruta. |
 | ¿Por qué los nodos son (estación, ruta)? | Así el transbordo es un arco más, con su costo. Si los nodos fueran solo estaciones, A* no sabría por qué ruta llegaste. |
 | ¿Por qué A* ahorra poco en algunas consultas? | Las rutas de Megabús son casi líneas: hay pocos caminos para descartar. En promedio ahorra un 9 %; en consultas con transbordo, más. |
-| ¿El mapa del navegador usa alguna librería? | No. Se genera con la biblioteca estándar de Python, a partir de las mismas coordenadas que usa la heurística. |
+| ¿La página del navegador usa alguna librería? | No. El HTML se genera con la biblioteca estándar de Python, a partir del mismo camino que devuelve A*. |
 | ¿Cómo sabes que funciona? | 19 pruebas del Integrante 3 (27 en total): misma ruta, transbordo, hora pico, origen = destino, estación inexistente, ruta imposible y el reporte HTML. Se corren con `python -m unittest discover tests`. |
