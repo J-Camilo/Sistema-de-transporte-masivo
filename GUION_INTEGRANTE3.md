@@ -38,7 +38,7 @@ python main.py --origen "Parque Olaya" --destino "Egoyá" --hora 10:00 --html
 ## 6. A* contra Dijkstra (7:35)
 
 > "Dijkstra es A* sin heurística. Los dos encuentran el mismo tiempo, pero A* revisó 20 nodos
-> y Dijkstra 27. Eso demuestra que la heurística sirve."
+> y Dijkstra 28. Eso demuestra que la heurística sirve."
 
 ---
 
