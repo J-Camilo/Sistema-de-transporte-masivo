@@ -2,39 +2,44 @@
 
 ```
 megabus/
-├── kb/                 Integrante 1 – Base de conocimiento
-│   ├── estaciones.py   37 estaciones con coordenadas, tipo y zona
-│   ├── conexiones.py   Rutas R1, R2, R3 y sus tramos con minutos
-│   └── reglas.py       12 reglas SI...ENTONCES (6 de deducción, 6 de ajuste)
-├── engine/
-│   └── inferencia.py   Integrante 2 – Motor de inferencia (encadenamiento hacia adelante)
-├── search/
-│   └── astar.py        Integrante 3 – Búsqueda A* (y comparación con Dijkstra)
-├── tests/
-│   ├── test_kb.py      Pruebas de la base de conocimiento
-│   ├── test_astar.py   Pruebas de A* con un mapa falso
-│   └── test_main.py    Pruebas de integración (motor real + consola)
-├── demo_kb.py          Demostración de la base de conocimiento
-└── main.py             Integrante 3 – Interfaz por consola
+├── src/                    Código fuente
+│   ├── kb/                 Integrante 1 – Base de conocimiento
+│   │   ├── estaciones.py   37 estaciones con coordenadas, tipo y zona
+│   │   ├── conexiones.py   Rutas R1, R2, R3 y sus tramos con minutos
+│   │   └── reglas.py       12 reglas SI...ENTONCES (6 de deducción, 6 de ajuste)
+│   ├── engine/
+│   │   └── inferencia.py   Integrante 2 – Motor de inferencia (encadenamiento hacia adelante)
+│   ├── search/
+│   │   └── astar.py        Integrante 3 – Búsqueda A* (y comparación con Dijkstra)
+│   ├── tests/
+│   │   ├── test_kb.py      Pruebas de la base de conocimiento
+│   │   ├── test_astar.py   Pruebas de A* con un mapa falso
+│   │   └── test_main.py    Pruebas de integración (motor real + consola)
+│   ├── demo_kb.py          Demostración de la base de conocimiento
+│   ├── reporte_html.py     Reporte HTML del resultado
+│   └── main.py             Integrante 3 – Interfaz por consola
+└── docs/                   Documentación
+    ├── PRUEBAS.md          Documento de pruebas
+    └── GUION_INTEGRANTE3.md Guion del video (Integrante 3)
 ```
-
-Requisitos: Python 3.8+ (sin librerías externas).
+Requisitos: Python 3.8+. No hay librerías externas, así que `pip install -r requirements.txt` no instala nada.
 
 ```
-python main.py --origen "Cuba" --destino "Dosquebradas" --hora 07:30
-python main.py                        # pregunta origen, destino y hora
-python main.py --listar               # lista las estaciones disponibles
-python demo_kb.py                     # demostración para el video (Integrante 1)
-python -m unittest discover tests     # corre las pruebas
+python src/main.py --origen "Cuba" --destino "Dosquebradas" --hora 07:30
+python src/main.py                        # pregunta origen, destino y hora
+python src/main.py --listar               # lista las estaciones disponibles
+python src/main.py --origen "Cuba" --destino "Egoyá" --hora 07:30 --html   # además abre el resultado en el navegador
+python src/demo_kb.py                     # demostración para el video (Integrante 1)
+python -m unittest discover -s src/tests -t src   # corre las pruebas
 ```
 
 El contrato entre los tres módulos está documentado en la cabecera de
-`kb/reglas.py`, `engine/inferencia.py` y `search/astar.py`.
+`src/kb/reglas.py`, `src/engine/inferencia.py` y `src/search/astar.py`.
 
 ## Ejemplo de ejecución
 
 ```
-python main.py --origen "Parque Olaya" --destino "Egoyá" --hora 07:30
+python src/main.py --origen "Parque Olaya" --destino "Egoyá" --hora 07:30
 ```
 ```
   1. Parque Olaya -> Maraya ..................... R1 ... 9.8 min
@@ -66,12 +71,12 @@ Códigos de salida: `0` hay ruta, `1` dato inválido, `2` no hay ruta (ej. `--ho
 
 | Tarea | Dónde |
 |---|---|
-| A* sobre el mapa del motor de inferencia | `search/astar.py` → `buscar()` |
+| A* sobre el mapa del motor de inferencia | `src/search/astar.py` → `buscar()` |
 | g(n) = minutos acumulados + transbordos | Los costos del mapa ya traen las penalizaciones del motor. A* solo los suma. |
-| h(n) = distancia en línea recta / velocidad del bus | `search/astar.py` → `heuristica()` |
-| Interfaz por consola | `main.py` (argumentos, o pregunta los datos si faltan) |
-| Casos de prueba | `tests/test_astar.py` y `tests/test_main.py` (18 pruebas) |
-| Extra: A* contra Dijkstra | `search/astar.py` → `comparar()` (Dijkstra es A* con h = 0) |
+| h(n) = distancia en línea recta / velocidad del bus | `src/search/astar.py` → `heuristica()` |
+| Interfaz por consola | `src/main.py` (argumentos, o pregunta los datos si faltan) |
+| Casos de prueba | `src/tests/test_astar.py` y `src/tests/test_main.py` (19 pruebas). Detalle en [docs/PRUEBAS.md](docs/PRUEBAS.md) |
+| Extra: A* contra Dijkstra | `src/search/astar.py` → `comparar()` (Dijkstra es A* con h = 0) |
 
 **¿Por qué h(n) nunca sobreestima?** La línea recta es la distancia más corta posible, y se divide
 por la velocidad **máxima** del bus (60 km/h), no por la promedio. El resultado es el tiempo más

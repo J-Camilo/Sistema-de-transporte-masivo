@@ -1,0 +1,3 @@
+# El proyecto solo usa la biblioteca estandar de Python (3.8+).
+# No hay dependencias externas: este archivo existe para que
+# "pip install -r requirements.txt" funcione sin errores.

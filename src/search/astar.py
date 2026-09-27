@@ -1,30 +1,3 @@
-"""
-search/astar.py  -  Búsqueda A*
-===============================
-INTEGRANTE 3  |  Base teórica: Capítulo 9
-
-    buscar(mapa, origen, destino) -> (camino, costo_total) o (None, None)
-
-El mapa viene del motor de inferencia (Integrante 2): los nodos son pares
-(estacion, ruta) y los costos de los arcos YA incluyen hora pico y transbordos.
-
-    f(n) = g(n) + h(n)
-    g(n) = minutos acumulados desde el origen (suma de los costos del mapa)
-    h(n) = distancia en línea recta hasta el destino / velocidad máxima del bus
-
-¿Por qué h(n) nunca sobreestima (heurística admisible)?
-    1. La línea recta es el camino más corto posible entre dos puntos:
-       el bus nunca recorre menos distancia que eso.
-    2. Se divide por la velocidad MÁXIMA (60 km/h), no la promedio:
-       el bus nunca va más rápido que eso.
-    Distancia mínima / velocidad máxima = el tiempo más optimista posible.
-    Por eso A* garantiza encontrar la ruta de menor tiempo.
-
-Origen y destino son estaciones, pero los nodos son (estacion, ruta):
-se arranca desde todos los nodos de la estación origen (puede tomar
-cualquier ruta) y se termina al llegar a cualquier nodo de la estación destino.
-"""
-
 import heapq
 
 from kb.conexiones import VELOCIDAD_MAXIMA_KMH
