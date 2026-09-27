@@ -15,10 +15,11 @@ megabus/
 │   ├── test_astar.py   Pruebas de A* con un mapa falso
 │   └── test_main.py    Pruebas de integración (motor real + consola)
 ├── demo_kb.py          Demostración de la base de conocimiento
-└── main.py             Integrante 3 – Interfaz por consola
+├── main.py             Integrante 3 – Interfaz por consola
+└── GUION_INTEGRANTE3.md Guion del video (Integrante 3)
 ```
 
-Requisitos: Python 3.8+ (sin librerías externas).
+Requisitos: Python 3.8+. No hay librerías externas, así que `pip install -r requirements.txt` no instala nada.
 
 ```
 python main.py --origen "Cuba" --destino "Dosquebradas" --hora 07:30
