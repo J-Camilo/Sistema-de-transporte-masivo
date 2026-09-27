@@ -25,6 +25,7 @@ Requisitos: Python 3.8+. No hay librerías externas, así que `pip install -r re
 python main.py --origen "Cuba" --destino "Dosquebradas" --hora 07:30
 python main.py                        # pregunta origen, destino y hora
 python main.py --listar               # lista las estaciones disponibles
+python main.py --origen "Cuba" --destino "Egoyá" --hora 07:30 --html   # además abre el resultado en el navegador
 python demo_kb.py                     # demostración para el video (Integrante 1)
 python -m unittest discover tests     # corre las pruebas
 ```

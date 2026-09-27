@@ -41,8 +41,11 @@
 ## 4. Demo 1: ruta con transbordo en hora pico (6:40 – 7:15)
 
 ```
-python main.py --origen "Parque Olaya" --destino "Egoyá" --hora 07:30
+python main.py --origen "Parque Olaya" --destino "Egoyá" --hora 07:30 --html
 ```
+
+*Con `--html` se abre una pestaña del navegador con el mapa y la ruta resaltada. Mostrar primero
+la terminal y luego la pestaña.*
 
 > "Aquí la mejor ruta toma la R1, hace **transbordo en Maraya** y sigue en la R2: 18.2 minutos.
 > Abajo aparecen las reglas que se activaron: D1 dice que es hora pico, A2 sube los tramos un
