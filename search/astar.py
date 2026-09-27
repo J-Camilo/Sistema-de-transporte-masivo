@@ -1,18 +1,111 @@
 """
 search/astar.py  -  Búsqueda A*
 ===============================
-INTEGRANTE 3  |  Base teórica: Capítulo 9        *** PENDIENTE ***
+INTEGRANTE 3  |  Base teórica: Capítulo 9
 
     buscar(mapa, origen, destino) -> (camino, costo_total) o (None, None)
 
-    g(n) = minutos acumulados (ya incluyen transbordos, vienen del mapa del Integrante 2)
-    h(n) = kb.estaciones.distancia_km(n, destino) / kb.conexiones.VELOCIDAD_MAXIMA_KMH * 60
+El mapa viene del motor de inferencia (Integrante 2): los nodos son pares
+(estacion, ruta) y los costos de los arcos YA incluyen hora pico y transbordos.
 
-    Nota: origen y destino son estaciones, pero los nodos del mapa son
-    (estacion, ruta). Se puede arrancar desde todos los nodos de la estación
-    de origen y terminar al llegar a cualquier nodo de la estación destino.
+    f(n) = g(n) + h(n)
+    g(n) = minutos acumulados desde el origen (suma de los costos del mapa)
+    h(n) = distancia en línea recta hasta el destino / velocidad máxima del bus
+
+¿Por qué h(n) nunca sobreestima (heurística admisible)?
+    1. La línea recta es el camino más corto posible entre dos puntos:
+       el bus nunca recorre menos distancia que eso.
+    2. Se divide por la velocidad MÁXIMA (60 km/h), no la promedio:
+       el bus nunca va más rápido que eso.
+    Distancia mínima / velocidad máxima = el tiempo más optimista posible.
+    Por eso A* garantiza encontrar la ruta de menor tiempo.
+
+Origen y destino son estaciones, pero los nodos son (estacion, ruta):
+se arranca desde todos los nodos de la estación origen (puede tomar
+cualquier ruta) y se termina al llegar a cualquier nodo de la estación destino.
 """
+
+import heapq
+
+from kb.conexiones import VELOCIDAD_MAXIMA_KMH
+from kb.estaciones import distancia_km
+
+
+def heuristica(estacion, destino):
+    """h(n): minutos que tardaría el bus en línea recta y a velocidad máxima."""
+    return distancia_km(estacion, destino) / VELOCIDAD_MAXIMA_KMH * 60
+
+
+def _reconstruir(padres, nodo):
+    """Recorre los padres hacia atrás, desde el destino hasta el origen."""
+    camino = [nodo]
+    while padres[nodo] is not None:
+        nodo = padres[nodo]
+        camino.append(nodo)
+    return list(reversed(camino))
+
+
+def _a_estrella(mapa, origen, destino, usar_heuristica=True):
+    """
+    Núcleo de la búsqueda. Devuelve (camino, costo, nodos_expandidos).
+    Con usar_heuristica=False, h(n) = 0 y el algoritmo es Dijkstra.
+    """
+    if origen == destino:
+        return [], 0, 0
+
+    h = heuristica if usar_heuristica else (lambda estacion, destino: 0)
+
+    # Frontera: cola de prioridad ordenada por f = g + h.
+    # El contador desempata sin tener que comparar nodos entre sí.
+    frontera = []
+    contador = 0
+    g = {}        # mejor costo conocido para llegar a cada nodo
+    padres = {}   # de qué nodo venimos, para reconstruir el camino
+
+    for nodo in mapa:
+        if nodo[0] == origen:
+            g[nodo] = 0
+            padres[nodo] = None
+            heapq.heappush(frontera, (h(origen, destino), contador, nodo))
+            contador += 1
+
+    expandidos = 0
+    while frontera:
+        f, _, nodo = heapq.heappop(frontera)
+        estacion = nodo[0]
+
+        # Entrada vieja: ya encontramos un camino mejor a este nodo.
+        if f > g[nodo] + h(estacion, destino):
+            continue
+
+        expandidos += 1
+        if estacion == destino:
+            return _reconstruir(padres, nodo), g[nodo], expandidos
+
+        for vecino, minutos in mapa.get(nodo, []):
+            nuevo_g = g[nodo] + minutos
+            if vecino not in g or nuevo_g < g[vecino]:
+                g[vecino] = nuevo_g
+                padres[vecino] = nodo
+                heapq.heappush(frontera, (nuevo_g + h(vecino[0], destino), contador, vecino))
+                contador += 1
+
+    return None, None, expandidos
 
 
 def buscar(mapa, origen, destino):
-    raise NotImplementedError("Lo implementa el Integrante 3")
+    """Ruta de menor tiempo entre dos estaciones: (camino, costo) o (None, None)."""
+    camino, costo, _ = _a_estrella(mapa, origen, destino)
+    return camino, costo
+
+
+def comparar(mapa, origen, destino):
+    """
+    Ejecuta A* y Dijkstra sobre el mismo mapa para demostrar que la heurística
+    sirve: ambos encuentran el mismo costo, pero A* revisa menos nodos.
+    """
+    resultado = {}
+    for nombre, usar_h in (("astar", True), ("dijkstra", False)):
+        _, costo, expandidos = _a_estrella(mapa, origen, destino, usar_heuristica=usar_h)
+        resultado[nombre] = {"costo": costo, "expandidos": expandidos}
+    return resultado
