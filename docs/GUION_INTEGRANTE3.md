@@ -6,7 +6,7 @@
 ## Antes de grabar
 
 - Letra de la terminal grande (que se lea en el celular).
-- Abrir `search/astar.py` en el editor.
+- Abrir `src/search/astar.py` en el editor.
 - Tener la terminal abierta en la carpeta del proyecto y el navegador a mano.
 - Correr una vez el comando de la demo 1, para que la pestaña abra rápido durante la grabación.
 
@@ -21,7 +21,7 @@
 
 ## 2. La fórmula f = g + h (5:25 – 6:00)
 
-*Mostrar la cabecera de `search/astar.py`.*
+*Mostrar la cabecera de `src/search/astar.py`.*
 
 > "A* ordena las opciones con **f = g + h**.
 > **g** es lo que ya sabemos: los minutos acumulados. Esos minutos ya traen la hora pico y los
@@ -41,7 +41,7 @@
 ## 4. Demo en hora pico: terminal + pestaña (6:25 – 7:15)
 
 ```
-python main.py --origen "Parque Olaya" --destino "Egoyá" --hora 07:30 --html
+python src/main.py --origen "Parque Olaya" --destino "Egoyá" --hora 07:30 --html
 ```
 
 *Primero la terminal (unos 5 segundos):*
@@ -63,7 +63,7 @@ python main.py --origen "Parque Olaya" --destino "Egoyá" --hora 07:30 --html
 ## 5. Demo fuera de hora pico (7:15 – 7:35)
 
 ```
-python main.py --origen "Parque Olaya" --destino "Egoyá" --hora 10:00 --html
+python src/main.py --origen "Parque Olaya" --destino "Egoyá" --hora 10:00 --html
 ```
 
 > "La misma consulta a las 10 de la mañana: 14 minutos. La etiqueta ahora dice **hora valle** y
@@ -87,4 +87,4 @@ python main.py --origen "Parque Olaya" --destino "Egoyá" --hora 10:00 --html
 | ¿Por qué los nodos son (estación, ruta)? | Así el transbordo es un arco más, con su costo. Si los nodos fueran solo estaciones, A* no sabría por qué ruta llegaste. |
 | ¿Por qué A* ahorra poco en algunas consultas? | Las rutas de Megabús son casi líneas: hay pocos caminos para descartar. En promedio ahorra un 9 %; en consultas con transbordo, más. |
 | ¿La página del navegador usa alguna librería? | No. El HTML se genera con la biblioteca estándar de Python, a partir del mismo camino que devuelve A*. |
-| ¿Cómo sabes que funciona? | 19 pruebas del Integrante 3 (27 en total): misma ruta, transbordo, hora pico, origen = destino, estación inexistente, ruta imposible y el reporte HTML. Se corren con `python -m unittest discover tests`. |
+| ¿Cómo sabes que funciona? | 19 pruebas del Integrante 3 (27 en total): misma ruta, transbordo, hora pico, origen = destino, estación inexistente, ruta imposible y el reporte HTML. Se corren con `python -m unittest discover -s src/tests -t src`. |
