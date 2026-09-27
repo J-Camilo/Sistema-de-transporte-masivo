@@ -2,8 +2,11 @@
 Ejecutar desde la raíz del proyecto:  python -m unittest discover tests
 """
 import io
+import os
+import tempfile
 import unittest
 from contextlib import redirect_stdout
+from unittest import mock
 
 from engine.inferencia import construir_mapa
 from main import main, resumir_camino, reglas_del_camino
@@ -50,6 +53,26 @@ class TestConsola(unittest.TestCase):
         self.assertIn("A1", salida)
 
 
+class TestReporteHtml(unittest.TestCase):
+
+    def test_html_se_genera_y_se_abre_en_el_navegador(self):
+        carpeta_original = os.getcwd()
+        with tempfile.TemporaryDirectory() as carpeta, \
+                mock.patch("main.webbrowser.open") as abrir:
+            os.chdir(carpeta)
+            try:
+                codigo, _ = ejecutar("--origen", "Parque Olaya", "--destino", "Egoyá",
+                                     "--hora", "07:30", "--html")
+                html = open("resultado.html", encoding="utf-8").read()
+            finally:
+                os.chdir(carpeta_original)
+        self.assertEqual(codigo, 0)
+        abrir.assert_called_once()
+        self.assertIn("Transbordo en Maraya", html)
+        self.assertIn("Hora pico aplicada", html)
+        self.assertIn("<svg", html)
+
+
 class TestConMotorReal(unittest.TestCase):
 
     def test_hora_pico_tarda_mas_que_hora_valle(self):
@@ -75,6 +98,7 @@ class TestConMotorReal(unittest.TestCase):
                                       ("maraya", "R1"), ("el_jardin", "R1")])
         self.assertEqual([p["tipo"] for p in pasos], ["tramo", "transbordo", "tramo"])
         self.assertEqual(pasos[1]["minutos"], 5)
+        self.assertEqual(pasos[0]["paradas"], 1)
 
     def test_reglas_del_camino_solo_incluye_arcos_usados(self):
         mapa, traza = construir_mapa("07:30")
