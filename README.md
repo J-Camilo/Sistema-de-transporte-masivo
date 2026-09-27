@@ -7,19 +7,23 @@ megabus/
 │   ├── conexiones.py   Rutas R1, R2, R3 y sus tramos con minutos
 │   └── reglas.py       12 reglas SI...ENTONCES (6 de deducción, 6 de ajuste)
 ├── engine/
-│   └── inferencia.py   Integrante 2 – Motor de inferencia (pendiente)
+│   └── inferencia.py   Integrante 2 – Motor de inferencia (encadenamiento hacia adelante)
 ├── search/
-│   └── astar.py        Integrante 3 – Búsqueda A* (pendiente)
+│   └── astar.py        Integrante 3 – Búsqueda A* (y comparación con Dijkstra)
 ├── tests/
-│   └── test_kb.py      Pruebas de la base de conocimiento
+│   ├── test_kb.py      Pruebas de la base de conocimiento
+│   ├── test_astar.py   Pruebas de A* con un mapa falso
+│   └── test_main.py    Pruebas de integración (motor real + consola)
 ├── demo_kb.py          Demostración de la base de conocimiento
-└── main.py             Integrante 3 – Interfaz por consola (pendiente)
+└── main.py             Integrante 3 – Interfaz por consola
 ```
 
 Requisitos: Python 3.8+ (sin librerías externas).
 
 ```
-python main.py                        # verifica la base de conocimiento
+python main.py --origen "Cuba" --destino "Dosquebradas" --hora 07:30
+python main.py                        # pregunta origen, destino y hora
+python main.py --listar               # lista las estaciones disponibles
 python demo_kb.py                     # demostración para el video (Integrante 1)
 python -m unittest discover tests     # corre las pruebas
 ```
