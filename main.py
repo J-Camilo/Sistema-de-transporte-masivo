@@ -11,17 +11,23 @@ Ejecutar:
     python main.py --origen "Cuba" --destino "Dosquebradas" --hora 07:30
     python main.py                      (pregunta origen, destino y hora)
     python main.py --listar             (muestra las estaciones disponibles)
+    python main.py ... --html           (además abre el resultado en el navegador)
 
 Códigos de salida: 0 = ruta encontrada, 1 = dato inválido, 2 = no hay ruta.
 """
 import argparse
 import sys
+import webbrowser
 from datetime import datetime
+from pathlib import Path
 
 from engine.inferencia import construir_mapa
 from kb.estaciones import ESTACIONES, buscar_por_nombre
 from kb.reglas import REGLAS, hora_a_minutos
+from reporte_html import generar_html
 from search.astar import buscar, comparar
+
+ARCHIVO_HTML = "resultado.html"
 
 
 def nombre(id_estacion):
@@ -43,9 +49,10 @@ def resumir_camino(mapa, camino):
         elif pasos and pasos[-1]["tipo"] == "tramo" and pasos[-1]["ruta"] == ruta_a:
             pasos[-1]["hasta"] = b
             pasos[-1]["minutos"] += minutos
+            pasos[-1]["paradas"] += 1
         else:
             pasos.append({"tipo": "tramo", "ruta": ruta_a,
-                          "desde": a, "hasta": b, "minutos": minutos})
+                          "desde": a, "hasta": b, "minutos": minutos, "paradas": 1})
     return pasos
 
 
@@ -91,12 +98,25 @@ def imprimir_comparacion(mapa, origen, destino):
     print(f"\nBÚSQUEDA: A* revisó {a} nodos | Dijkstra (sin heurística) revisó {d} nodos")
 
 
+def abrir_html(mapa, camino, costo, traza, origen, destino, hora):
+    """Guarda el reporte en resultado.html y lo abre en el navegador."""
+    html = generar_html(origen, destino, hora, camino, costo,
+                        resumir_camino(mapa, camino), reglas_del_camino(camino, traza),
+                        comparar(mapa, origen, destino))
+    archivo = Path(ARCHIVO_HTML).resolve()
+    archivo.write_text(html, encoding="utf-8")
+    print(f"\nReporte visual: {archivo}")
+    webbrowser.open(archivo.as_uri())
+
+
 def leer_argumentos(argv):
     parser = argparse.ArgumentParser(description="Mejor ruta en Megabús (Pereira)")
     parser.add_argument("--origen", help="estación de origen (ej: Cuba)")
     parser.add_argument("--destino", help="estación de destino (ej: Dosquebradas)")
     parser.add_argument("--hora", help="hora del viaje HH:MM (por defecto, la hora actual)")
     parser.add_argument("--listar", action="store_true", help="muestra las estaciones")
+    parser.add_argument("--html", action="store_true",
+                        help="abre el resultado en una pestaña del navegador")
     args = parser.parse_args(argv)
 
     # Si faltan datos, se le preguntan al usuario por consola.
@@ -146,6 +166,8 @@ def main(argv=None):
 
     imprimir_ruta(mapa, camino, costo, traza, origen, destino, args.hora)
     imprimir_comparacion(mapa, origen, destino)
+    if args.html:
+        abrir_html(mapa, camino, costo, traza, origen, destino, args.hora)
     return 0
 
 
