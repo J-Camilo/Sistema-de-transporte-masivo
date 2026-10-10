@@ -1,3 +1,5 @@
-# El proyecto solo usa la biblioteca estandar de Python (3.8+).
-# No hay dependencias externas: este archivo existe para que
-# "pip install -r requirements.txt" funcione sin errores.
+# Actividad 1 (src/kb, src/engine, src/search, src/main.py): solo biblioteca estandar (3.8+).
+# Actividad 2 (data/ y src/ml/): analisis de datos y arbol de decision.
+pandas
+matplotlib
+scikit-learn
