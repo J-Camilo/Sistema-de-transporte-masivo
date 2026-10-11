@@ -25,6 +25,7 @@ son puntos medios entre dos valores del entrenamiento.
 
 Ejecutar (desde la raíz, necesita docs/reglas_aprendidas.txt del Rol B):
     python src/ml/integracion.py --origen "Cuba" --destino "Dosquebradas" --hora 18:00 --clima lluvia
+    python src/ml/integracion.py ... --html      (además abre el resultado en el navegador)
     python src/ml/integracion.py --listar        (muestra las reglas cargadas)
 """
 
@@ -44,6 +45,7 @@ from kb import reglas as kb_reglas
 
 RUTA_REGLAS = RAIZ / "docs" / "reglas_aprendidas.txt"
 RUTA_CSV = RAIZ / "data" / "viajes_megabus.csv"
+ARCHIVO_HTML = "resultado_integracion.html"
 
 # Columnas de texto que preparacion.py convirtió con get_dummies().
 CATEGORICAS = ["estacion_origen", "estacion_destino", "dia_semana", "clima", "ruta"]
@@ -267,6 +269,7 @@ def leer_argumentos(argv):
     p.add_argument("--todas", action="store_true",
                    help="Carga TODAS las reglas del árbol, no solo las escogidas")
     p.add_argument("--listar", action="store_true", help="Muestra las reglas cargadas y termina")
+    p.add_argument("--html", action="store_true", help="Abre el resultado en el navegador")
     return p.parse_args(argv)
 
 
@@ -321,6 +324,11 @@ def main(argv=None):
     else:
         print(f"\nDEMORA ESPERADA: ninguna de las {len(aprendidas)} reglas cargadas aplica a este viaje"
               " (pruebe con --todas)")
+
+    if args.html:
+        from ml.reporte import guardar_y_abrir, html_integracion
+        guardar_y_abrir(html_integracion(mapa, camino, costo, origen, destino, args.hora, hechos,
+                                         traza_viaje, aprendidas, nivel), ARCHIVO_HTML)
     return 0
 
 

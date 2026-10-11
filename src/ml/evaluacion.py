@@ -19,6 +19,7 @@ Ejecutar (desde la raíz):
     python src/ml/evaluacion.py
 Genera docs/figuras/06_matriz_confusion.png y docs/figuras/07_comparacion_modelos.png
 e imprime las tablas en Markdown para docs/pruebas_modelo.md.
+    python src/ml/evaluacion.py --html   (además abre los resultados en el navegador)
 """
 
 import sys
@@ -47,6 +48,7 @@ CLASES = ["baja", "media", "alta"]
 PROFUNDIDADES = range(3, 13)
 RUTA_MODELO = RAIZ / "resultados" / "modelo_arbol.joblib"
 FIGURAS = RAIZ / "docs" / "figuras"
+ARCHIVO_HTML = "resultado_evaluacion.html"
 PLIEGUES = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEMILLA)
 
 
@@ -203,9 +205,9 @@ def main():
                 [(f["nombre"], pct(f["entrena"]), pct(f["prueba"]), pct(f["cv"].mean()),
                   pct(f["cv"].std()), " · ".join(pct(v) for v in f["cv"])) for f in comparacion]))
 
+    curva = profundidad_por_validacion(X, y)
     print("\nProfundidad según validación cruzada (sin tocar el conjunto de prueba):\n")
-    print(tabla(["Profundidad", "CV media"],
-                [(p, pct(m)) for p, m in profundidad_por_validacion(X, y)]))
+    print(tabla(["Profundidad", "CV media"], [(p, pct(m)) for p, m in curva]))
 
     print("\n## 4. Reglas aprendidas dentro del motor de la Actividad 1\n")
     total, iguales, viajes, por_regla = probar_integracion(df.loc[X_prueba.index], y_pred)
@@ -214,6 +216,22 @@ def main():
     print(tabla(["Regla", "Condiciones", "Viajes de prueba que cubre", "Acierto en esos viajes"],
                 [(r["id"], r["descripcion"].removeprefix("Aprendida del árbol: "), n,
                   pct(a / n) if n else "-") for r, n, a in por_regla]))
+
+    if "--html" in sys.argv:
+        from ml.reporte import guardar_y_abrir, html_evaluacion
+        precision, recall, f1, soporte = precision_recall_fscore_support(y_prueba, y_pred, labels=CLASES)
+        resultados = {
+            "profundidad": profundidad, "viajes_prueba": len(X_prueba), "accuracy": acierto,
+            "por_clase": list(zip(CLASES, precision, recall, f1, soporte)),
+            "matriz": matriz.tolist(),
+            "modelos": [{"nombre": f["nombre"], "prueba": f["prueba"], "cv": list(f["cv"])}
+                        for f in comparacion],
+            "curva": curva,
+            "fidelidad": {"reglas": total, "iguales": iguales, "viajes": viajes},
+            "por_regla": [(r["id"], r["descripcion"].removeprefix("Aprendida del árbol: "), n,
+                           a / n if n else 0) for r, n, a in por_regla],
+        }
+        guardar_y_abrir(html_evaluacion(resultados), ARCHIVO_HTML)
 
 
 if __name__ == "__main__":
