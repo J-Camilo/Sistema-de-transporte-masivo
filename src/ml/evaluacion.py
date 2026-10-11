@@ -3,7 +3,12 @@ ml/evaluacion.py - Qué tan bueno es el árbol y si sus reglas funcionan en el m
 ==================================================================================
 Rol C | Base teórica: Capítulo 17
 
-Usa el contrato del Rol B (preparacion.py y arbol.py) y mide:
+Usa lo que entrega el Rol B y mide:
+    - preparacion.preparar_datos()  -> X_entrena, X_prueba, y_entrena, y_prueba (70/30)
+    - arbol.entrenar_arbol(X, y, profundidad)
+    - resultados/modelo_arbol.joblib -> la profundidad que escogió el Rol B
+    - docs/reglas_aprendidas.txt     -> las reglas (export_text)
+
     1. Accuracy, precisión, recall y F1 por clase + matriz de confusión (30 % de prueba).
     2. Validación cruzada estratificada de 5 particiones: ¿el resultado es estable?
     3. Comparación contra una línea base (DummyClassifier) y un RandomForest.
@@ -19,7 +24,9 @@ e imprime las tablas en Markdown para docs/pruebas_modelo.md.
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+RAIZ = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(RAIZ / "src"))
+sys.path.insert(0, str(RAIZ / "src" / "ml"))   # arbol.py importa "from preparacion import ..."
 
 import matplotlib
 matplotlib.use("Agg")
@@ -30,21 +37,39 @@ from sklearn.metrics import (ConfusionMatrixDisplay, accuracy_score, confusion_m
                              precision_recall_fscore_support)
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
-from ml.arbol import PROFUNDIDAD, PROFUNDIDADES, entrenar
+import pandas as pd
+from arbol import entrenar_arbol
 from ml.integracion import cargar_reglas_aprendidas, hechos_de_fila, inferir_demora
-from ml.preparacion import RAIZ, SEMILLA, cargar_datos, dividir, preparar
+from preparacion import cargar_datos, preparar_datos
 
+SEMILLA = 42
 CLASES = ["baja", "media", "alta"]
+PROFUNDIDADES = range(3, 13)
+RUTA_MODELO = RAIZ / "resultados" / "modelo_arbol.joblib"
 FIGURAS = RAIZ / "docs" / "figuras"
 PLIEGUES = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEMILLA)
 
 
-def modelos():
+def profundidad_del_rol_b():
+    """
+    El Rol B escoge la profundidad con validación cruzada y guarda el modelo.
+    Aquí solo se lee esa profundidad y el árbol se vuelve a entrenar con los mismos
+    datos y la misma semilla: así no depende de la versión de scikit-learn con la
+    que se guardó el .joblib.
+    """
+    import warnings
+    import joblib
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        return joblib.load(RUTA_MODELO)["modelo"].max_depth
+
+
+def modelos(profundidad):
     return {
         "Línea base (DummyClassifier)": DummyClassifier(strategy="most_frequent"),
-        f"Árbol de decisión (profundidad {PROFUNDIDAD})": None,   # se entrena con arbol.entrenar
-        # Por defecto cada división mira sqrt(92) ≈ 9 columnas al azar; como 74 de las 92 son
-        # estaciones (casi no influyen), muchas divisiones no ven ninguna columna útil.
+        f"Árbol de decisión (profundidad {profundidad})": None,   # arbol.entrenar_arbol del Rol B
+        # Por defecto cada división mira sqrt(columnas) al azar; como la mayoría de las
+        # columnas son estaciones (casi no influyen), muchas divisiones no ven ninguna útil.
         "RandomForest (por defecto)": RandomForestClassifier(n_estimators=200, random_state=SEMILLA),
         "RandomForest (todas las columnas)": RandomForestClassifier(
             n_estimators=200, max_features=None, random_state=SEMILLA),
@@ -74,10 +99,10 @@ def metricas(y_real, y_pred):
     return accuracy_score(y_real, y_pred), filas
 
 
-def graficar_matriz(y_real, y_pred, ruta):
+def graficar_matriz(y_real, y_pred, ruta, profundidad):
     matriz = confusion_matrix(y_real, y_pred, labels=CLASES)
     ConfusionMatrixDisplay(matriz, display_labels=CLASES).plot(cmap="Blues", colorbar=False)
-    plt.title(f"Matriz de confusión - árbol (profundidad {PROFUNDIDAD})")
+    plt.title(f"Matriz de confusión - árbol (profundidad {profundidad})")
     plt.xlabel("Predicción del árbol")
     plt.ylabel("Valor real")
     plt.tight_layout()
@@ -89,10 +114,13 @@ def graficar_matriz(y_real, y_pred, ruta):
 # ---------------------------------------------------------------------------
 # 2 y 3. Validación cruzada y comparación de modelos
 # ---------------------------------------------------------------------------
-def comparar_modelos(X, y, X_entrena, X_prueba, y_entrena, y_prueba):
+def comparar_modelos(X, y, X_entrena, X_prueba, y_entrena, y_prueba, profundidad):
     filas = []
-    for nombre, modelo in modelos().items():
-        ajustado = entrenar(X_entrena, y_entrena) if modelo is None else modelo.fit(X_entrena, y_entrena)
+    for nombre, modelo in modelos(profundidad).items():
+        if modelo is None:
+            ajustado = entrenar_arbol(X_entrena, y_entrena, profundidad)
+        else:
+            ajustado = modelo.fit(X_entrena, y_entrena)
         # cross_val_score clona el modelo: cada partición se entrena desde cero.
         cv = cross_val_score(ajustado, X, y, cv=PLIEGUES)
         filas.append({"nombre": nombre, "prueba": ajustado.score(X_prueba, y_prueba),
@@ -119,7 +147,7 @@ def graficar_comparacion(filas, ruta):
 
 def profundidad_por_validacion(X, y):
     """Confirma la profundidad del Rol B sin mirar el conjunto de prueba."""
-    return [(p, cross_val_score(entrenar(X, y, p), X, y, cv=PLIEGUES).mean())
+    return [(p, cross_val_score(entrenar_arbol(X, y, p), X, y, cv=PLIEGUES).mean())
             for p in PROFUNDIDADES]
 
 
@@ -148,9 +176,10 @@ def probar_integracion(df_prueba, y_arbol):
 def main():
     sys.stdout.reconfigure(encoding="utf-8")
     df = cargar_datos()
-    X, y = preparar(df)
-    X_entrena, X_prueba, y_entrena, y_prueba = dividir(X, y)
-    arbol = entrenar(X_entrena, y_entrena)
+    X_entrena, X_prueba, y_entrena, y_prueba = preparar_datos()
+    X, y = pd.concat([X_entrena, X_prueba]), pd.concat([y_entrena, y_prueba])
+    profundidad = profundidad_del_rol_b()
+    arbol = entrenar_arbol(X_entrena, y_entrena, profundidad)
     y_pred = arbol.predict(X_prueba)
     FIGURAS.mkdir(parents=True, exist_ok=True)
 
@@ -158,17 +187,17 @@ def main():
           f" | {X.shape[1]} columnas después de get_dummies()\n")
 
     acierto, filas = metricas(y_prueba, y_pred)
-    print(f"## 1. Árbol (profundidad {PROFUNDIDAD}) sobre el 30 % de prueba\n")
+    print(f"## 1. Árbol (profundidad {profundidad}) sobre el 30 % de prueba\n")
     print(f"Accuracy: **{pct(acierto)}**\n")
     print(tabla(["Clase", "Precisión", "Recall", "F1", "Viajes"], filas))
 
-    matriz = graficar_matriz(y_prueba, y_pred, FIGURAS / "06_matriz_confusion.png")
+    matriz = graficar_matriz(y_prueba, y_pred, FIGURAS / "06_matriz_confusion.png", profundidad)
     print("\nMatriz de confusión (filas = real, columnas = predicho):\n")
     print(tabla(["Real \\ Predicho"] + CLASES,
                 [[f"**{c}**"] + list(fila) for c, fila in zip(CLASES, matriz)]))
 
     print("\n## 2 y 3. Validación cruzada (5 particiones) y comparación\n")
-    comparacion = comparar_modelos(X, y, X_entrena, X_prueba, y_entrena, y_prueba)
+    comparacion = comparar_modelos(X, y, X_entrena, X_prueba, y_entrena, y_prueba, profundidad)
     graficar_comparacion(comparacion, FIGURAS / "07_comparacion_modelos.png")
     print(tabla(["Modelo", "Entrenamiento", "Prueba (30 %)", "CV media", "CV desv.", "CV por partición"],
                 [(f["nombre"], pct(f["entrena"]), pct(f["prueba"]), pct(f["cv"].mean()),
