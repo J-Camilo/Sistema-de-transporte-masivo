@@ -1,0 +1,466 @@
+|--- tiempo_base_min <= 7.135
+|   |--- hora <= 8.500
+|   |   |--- hora <= 5.500
+|   |   |   |--- estacion_destino_Victoria <= 0.500
+|   |   |   |   |--- class: baja
+|   |   |   |--- estacion_destino_Victoria >  0.500
+|   |   |   |   |--- class: alta
+|   |   |--- hora >  5.500
+|   |   |   |--- dia_semana_domingo <= 0.500
+|   |   |   |   |--- tiempo_base_min <= 6.295
+|   |   |   |   |   |--- es_festivo <= 0.500
+|   |   |   |   |   |   |--- distancia_km <= 1.168
+|   |   |   |   |   |   |   |--- distancia_km <= 0.404
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- distancia_km >  0.404
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |--- distancia_km >  1.168
+|   |   |   |   |   |   |   |--- distancia_km <= 1.689
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- distancia_km >  1.689
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |--- es_festivo >  0.500
+|   |   |   |   |   |   |--- tiempo_base_min <= 3.465
+|   |   |   |   |   |   |   |--- clima_lluvia <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- clima_lluvia >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- tiempo_base_min >  3.465
+|   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |--- tiempo_base_min >  6.295
+|   |   |   |   |   |--- clima_despejado <= 0.500
+|   |   |   |   |   |   |--- hora <= 6.500
+|   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |--- hora >  6.500
+|   |   |   |   |   |   |   |--- estacion_origen_Dosquebradas <= 0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- estacion_origen_Dosquebradas >  0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |--- clima_despejado >  0.500
+|   |   |   |   |   |   |--- estacion_destino_Parque Olaya <= 0.500
+|   |   |   |   |   |   |   |--- dia_semana_miercoles <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- dia_semana_miercoles >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- estacion_destino_Parque Olaya >  0.500
+|   |   |   |   |   |   |   |--- estacion_origen_Dosquebradas <= 0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- estacion_origen_Dosquebradas >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |--- dia_semana_domingo >  0.500
+|   |   |   |   |--- tiempo_base_min <= 4.585
+|   |   |   |   |   |--- estacion_destino_Parque Olaya <= 0.500
+|   |   |   |   |   |   |--- distancia_km <= 0.840
+|   |   |   |   |   |   |   |--- estacion_destino_Los Molinos <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- estacion_destino_Los Molinos >  0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |--- distancia_km >  0.840
+|   |   |   |   |   |   |   |--- distancia_km <= 0.942
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- distancia_km >  0.942
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |--- estacion_destino_Parque Olaya >  0.500
+|   |   |   |   |   |   |--- tiempo_base_min <= 3.145
+|   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- tiempo_base_min >  3.145
+|   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |--- tiempo_base_min >  4.585
+|   |   |   |   |   |--- estacion_origen_Insuperables <= 0.500
+|   |   |   |   |   |   |--- estacion_origen_Terminal <= 0.500
+|   |   |   |   |   |   |   |--- estacion_origen_Viaducto <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- estacion_origen_Viaducto >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- estacion_origen_Terminal >  0.500
+|   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |--- estacion_origen_Insuperables >  0.500
+|   |   |   |   |   |   |--- class: baja
+|   |--- hora >  8.500
+|   |   |--- hora <= 16.500
+|   |   |   |--- tiempo_base_min <= 5.060
+|   |   |   |   |--- clima_lluvia <= 0.500
+|   |   |   |   |   |--- estacion_origen_Jardin <= 0.500
+|   |   |   |   |   |   |--- estacion_origen_Egoya <= 0.500
+|   |   |   |   |   |   |   |--- tiempo_base_min <= 3.125
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- tiempo_base_min >  3.125
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- estacion_origen_Egoya >  0.500
+|   |   |   |   |   |   |   |--- hora <= 9.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- hora >  9.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |--- estacion_origen_Jardin >  0.500
+|   |   |   |   |   |   |--- dia_semana_miercoles <= 0.500
+|   |   |   |   |   |   |   |--- estacion_destino_Centro <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- estacion_destino_Centro >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- dia_semana_miercoles >  0.500
+|   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |--- clima_lluvia >  0.500
+|   |   |   |   |   |--- dia_semana_sabado <= 0.500
+|   |   |   |   |   |   |--- hora <= 15.500
+|   |   |   |   |   |   |   |--- dia_semana_domingo <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- dia_semana_domingo >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- hora >  15.500
+|   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |--- dia_semana_sabado >  0.500
+|   |   |   |   |   |   |--- class: baja
+|   |   |   |--- tiempo_base_min >  5.060
+|   |   |   |   |--- clima_lluvia <= 0.500
+|   |   |   |   |   |--- hora <= 13.500
+|   |   |   |   |   |   |--- hora <= 10.500
+|   |   |   |   |   |   |   |--- distancia_km <= 1.956
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- distancia_km >  1.956
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- hora >  10.500
+|   |   |   |   |   |   |   |--- dia_semana_domingo <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- dia_semana_domingo >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |--- hora >  13.500
+|   |   |   |   |   |   |--- estacion_origen_Travesuras <= 0.500
+|   |   |   |   |   |   |   |--- estacion_destino_Cuba <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- estacion_destino_Cuba >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- estacion_origen_Travesuras >  0.500
+|   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |--- clima_lluvia >  0.500
+|   |   |   |   |   |--- dia_semana_sabado <= 0.500
+|   |   |   |   |   |   |--- estacion_origen_San Fernando <= 0.500
+|   |   |   |   |   |   |   |--- tiempo_base_min <= 6.220
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- tiempo_base_min >  6.220
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |--- estacion_origen_San Fernando >  0.500
+|   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |--- dia_semana_sabado >  0.500
+|   |   |   |   |   |   |--- class: baja
+|   |   |--- hora >  16.500
+|   |   |   |--- hora <= 19.500
+|   |   |   |   |--- dia_semana_domingo <= 0.500
+|   |   |   |   |   |--- es_festivo <= 0.500
+|   |   |   |   |   |   |--- clima_lluvia <= 0.500
+|   |   |   |   |   |   |   |--- dia_semana_sabado <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- dia_semana_sabado >  0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |--- clima_lluvia >  0.500
+|   |   |   |   |   |   |   |--- tiempo_base_min <= 4.585
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- tiempo_base_min >  4.585
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |--- es_festivo >  0.500
+|   |   |   |   |   |   |--- tiempo_base_min <= 5.300
+|   |   |   |   |   |   |   |--- clima_lluvia <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- clima_lluvia >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- tiempo_base_min >  5.300
+|   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |--- dia_semana_domingo >  0.500
+|   |   |   |   |   |--- clima_lluvia <= 0.500
+|   |   |   |   |   |   |--- tiempo_base_min <= 3.220
+|   |   |   |   |   |   |   |--- estacion_destino_Universidad <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- estacion_destino_Universidad >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- tiempo_base_min >  3.220
+|   |   |   |   |   |   |   |--- hora <= 18.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- hora >  18.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |--- clima_lluvia >  0.500
+|   |   |   |   |   |   |--- distancia_km <= 0.611
+|   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- distancia_km >  0.611
+|   |   |   |   |   |   |   |--- estacion_destino_San Fernando <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- estacion_destino_San Fernando >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |--- hora >  19.500
+|   |   |   |   |--- hora <= 21.500
+|   |   |   |   |   |--- clima_despejado <= 0.500
+|   |   |   |   |   |   |--- tiempo_base_min <= 3.880
+|   |   |   |   |   |   |   |--- tiempo_base_min <= 3.655
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- tiempo_base_min >  3.655
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |--- tiempo_base_min >  3.880
+|   |   |   |   |   |   |   |--- estacion_origen_Terminal <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- estacion_origen_Terminal >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |--- clima_despejado >  0.500
+|   |   |   |   |   |   |--- distancia_km <= 2.363
+|   |   |   |   |   |   |   |--- distancia_km <= 1.271
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- distancia_km >  1.271
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- distancia_km >  2.363
+|   |   |   |   |   |   |   |--- distancia_km <= 2.408
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- distancia_km >  2.408
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |--- hora >  21.500
+|   |   |   |   |   |--- estacion_origen_Cuba <= 0.500
+|   |   |   |   |   |   |--- estacion_destino_Parque Olaya <= 0.500
+|   |   |   |   |   |   |   |--- estacion_origen_Viaducto <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- estacion_origen_Viaducto >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- estacion_destino_Parque Olaya >  0.500
+|   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |--- estacion_origen_Cuba >  0.500
+|   |   |   |   |   |   |--- class: media
+|--- tiempo_base_min >  7.135
+|   |--- hora <= 8.500
+|   |   |--- dia_semana_domingo <= 0.500
+|   |   |   |--- hora <= 5.500
+|   |   |   |   |--- ruta_Ruta 1 <= 0.500
+|   |   |   |   |   |--- distancia_km <= 5.033
+|   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |--- distancia_km >  5.033
+|   |   |   |   |   |   |--- class: baja
+|   |   |   |   |--- ruta_Ruta 1 >  0.500
+|   |   |   |   |   |--- class: baja
+|   |   |   |--- hora >  5.500
+|   |   |   |   |--- tiempo_base_min <= 9.405
+|   |   |   |   |   |--- dia_semana_sabado <= 0.500
+|   |   |   |   |   |   |--- tiempo_base_min <= 8.205
+|   |   |   |   |   |   |   |--- estacion_destino_Cuba <= 0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- estacion_destino_Cuba >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- tiempo_base_min >  8.205
+|   |   |   |   |   |   |   |--- clima_despejado <= 0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- clima_despejado >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |--- dia_semana_sabado >  0.500
+|   |   |   |   |   |   |--- estacion_origen_Perla del Otun <= 0.500
+|   |   |   |   |   |   |   |--- estacion_destino_Travesuras <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- estacion_destino_Travesuras >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- estacion_origen_Perla del Otun >  0.500
+|   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |--- tiempo_base_min >  9.405
+|   |   |   |   |   |--- es_festivo <= 0.500
+|   |   |   |   |   |   |--- estacion_destino_La Macarena <= 0.500
+|   |   |   |   |   |   |   |--- clima_despejado <= 0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- clima_despejado >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- estacion_destino_La Macarena >  0.500
+|   |   |   |   |   |   |   |--- clima_nublado <= 0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- clima_nublado >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |--- es_festivo >  0.500
+|   |   |   |   |   |   |--- distancia_km <= 4.011
+|   |   |   |   |   |   |   |--- estacion_origen_Travesuras <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- estacion_origen_Travesuras >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- distancia_km >  4.011
+|   |   |   |   |   |   |   |--- estacion_destino_Jardin <= 0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- estacion_destino_Jardin >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |--- dia_semana_domingo >  0.500
+|   |   |   |--- clima_despejado <= 0.500
+|   |   |   |   |--- tiempo_base_min <= 12.795
+|   |   |   |   |   |--- clima_lluvia <= 0.500
+|   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |--- clima_lluvia >  0.500
+|   |   |   |   |   |   |--- ruta_Ruta 2 <= 0.500
+|   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- ruta_Ruta 2 >  0.500
+|   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |--- tiempo_base_min >  12.795
+|   |   |   |   |   |--- estacion_destino_La Macarena <= 0.500
+|   |   |   |   |   |   |--- estacion_destino_Perla del Otun <= 0.500
+|   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- estacion_destino_Perla del Otun >  0.500
+|   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |--- estacion_destino_La Macarena >  0.500
+|   |   |   |   |   |   |--- class: media
+|   |   |   |--- clima_despejado >  0.500
+|   |   |   |   |--- hora <= 5.500
+|   |   |   |   |   |--- class: baja
+|   |   |   |   |--- hora >  5.500
+|   |   |   |   |   |--- estacion_destino_Egoya <= 0.500
+|   |   |   |   |   |   |--- estacion_origen_Viaducto <= 0.500
+|   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |--- estacion_origen_Viaducto >  0.500
+|   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |--- estacion_destino_Egoya >  0.500
+|   |   |   |   |   |   |--- class: alta
+|   |--- hora >  8.500
+|   |   |--- hora <= 16.500
+|   |   |   |--- clima_lluvia <= 0.500
+|   |   |   |   |--- hora <= 13.500
+|   |   |   |   |   |--- hora <= 10.500
+|   |   |   |   |   |   |--- distancia_km <= 6.105
+|   |   |   |   |   |   |   |--- estacion_destino_Guadalupe <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- estacion_destino_Guadalupe >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- distancia_km >  6.105
+|   |   |   |   |   |   |   |--- tiempo_base_min <= 17.760
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- tiempo_base_min >  17.760
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |--- hora >  10.500
+|   |   |   |   |   |   |--- tiempo_base_min <= 17.925
+|   |   |   |   |   |   |   |--- dia_semana_domingo <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- dia_semana_domingo >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- tiempo_base_min >  17.925
+|   |   |   |   |   |   |   |--- tiempo_base_min <= 21.425
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- tiempo_base_min >  21.425
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |--- hora >  13.500
+|   |   |   |   |   |--- tiempo_base_min <= 19.985
+|   |   |   |   |   |   |--- estacion_origen_Travesuras <= 0.500
+|   |   |   |   |   |   |   |--- tiempo_base_min <= 15.705
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- tiempo_base_min >  15.705
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- estacion_origen_Travesuras >  0.500
+|   |   |   |   |   |   |   |--- dia_semana_domingo <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- dia_semana_domingo >  0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |--- tiempo_base_min >  19.985
+|   |   |   |   |   |   |--- clima_nublado <= 0.500
+|   |   |   |   |   |   |   |--- estacion_origen_Guadalupe <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- estacion_origen_Guadalupe >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- clima_nublado >  0.500
+|   |   |   |   |   |   |   |--- estacion_origen_Corales <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- estacion_origen_Corales >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |--- clima_lluvia >  0.500
+|   |   |   |   |--- tiempo_base_min <= 8.205
+|   |   |   |   |   |--- estacion_destino_Travesuras <= 0.500
+|   |   |   |   |   |   |--- tiempo_base_min <= 7.815
+|   |   |   |   |   |   |   |--- hora <= 11.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- hora >  11.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- tiempo_base_min >  7.815
+|   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |--- estacion_destino_Travesuras >  0.500
+|   |   |   |   |   |   |--- class: baja
+|   |   |   |   |--- tiempo_base_min >  8.205
+|   |   |   |   |   |--- dia_semana_domingo <= 0.500
+|   |   |   |   |   |   |--- hora <= 10.500
+|   |   |   |   |   |   |   |--- distancia_km <= 6.105
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- distancia_km >  6.105
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- hora >  10.500
+|   |   |   |   |   |   |   |--- tiempo_base_min <= 11.610
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- tiempo_base_min >  11.610
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |--- dia_semana_domingo >  0.500
+|   |   |   |   |   |   |--- estacion_origen_Cuba <= 0.500
+|   |   |   |   |   |   |   |--- estacion_origen_Parque Olaya <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- estacion_origen_Parque Olaya >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- estacion_origen_Cuba >  0.500
+|   |   |   |   |   |   |   |--- class: media
+|   |   |--- hora >  16.500
+|   |   |   |--- hora <= 19.500
+|   |   |   |   |--- dia_semana_domingo <= 0.500
+|   |   |   |   |   |--- es_festivo <= 0.500
+|   |   |   |   |   |   |--- tiempo_base_min <= 8.410
+|   |   |   |   |   |   |   |--- dia_semana_sabado <= 0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- dia_semana_sabado >  0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |--- tiempo_base_min >  8.410
+|   |   |   |   |   |   |   |--- dia_semana_sabado <= 0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- dia_semana_sabado >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |--- es_festivo >  0.500
+|   |   |   |   |   |   |--- tiempo_base_min <= 17.890
+|   |   |   |   |   |   |   |--- estacion_destino_Insuperables <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- estacion_destino_Insuperables >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- tiempo_base_min >  17.890
+|   |   |   |   |   |   |   |--- estacion_destino_Cuba <= 0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- estacion_destino_Cuba >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |--- dia_semana_domingo >  0.500
+|   |   |   |   |   |--- clima_lluvia <= 0.500
+|   |   |   |   |   |   |--- estacion_destino_Cuba <= 0.500
+|   |   |   |   |   |   |   |--- estacion_origen_Insuperables <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- estacion_origen_Insuperables >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- estacion_destino_Cuba >  0.500
+|   |   |   |   |   |   |   |--- num_transbordos <= 0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |   |--- num_transbordos >  0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |--- clima_lluvia >  0.500
+|   |   |   |   |   |   |--- distancia_km <= 2.986
+|   |   |   |   |   |   |   |--- estacion_destino_Viaducto <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- estacion_destino_Viaducto >  0.500
+|   |   |   |   |   |   |   |   |--- class: alta
+|   |   |   |   |   |   |--- distancia_km >  2.986
+|   |   |   |   |   |   |   |--- class: alta
+|   |   |   |--- hora >  19.500
+|   |   |   |   |--- clima_lluvia <= 0.500
+|   |   |   |   |   |--- distancia_km <= 4.227
+|   |   |   |   |   |   |--- tiempo_base_min <= 11.350
+|   |   |   |   |   |   |   |--- estacion_origen_Viaducto <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- estacion_origen_Viaducto >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- tiempo_base_min >  11.350
+|   |   |   |   |   |   |   |--- tiempo_base_min <= 14.985
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- tiempo_base_min >  14.985
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |--- distancia_km >  4.227
+|   |   |   |   |   |   |--- estacion_origen_La Romelia <= 0.500
+|   |   |   |   |   |   |   |--- estacion_destino_Los Molinos <= 0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |   |--- estacion_destino_Los Molinos >  0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |--- estacion_origen_La Romelia >  0.500
+|   |   |   |   |   |   |   |--- estacion_destino_Perla del Otun <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- estacion_destino_Perla del Otun >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |--- clima_lluvia >  0.500
+|   |   |   |   |   |--- dia_semana_domingo <= 0.500
+|   |   |   |   |   |   |--- es_festivo <= 0.500
+|   |   |   |   |   |   |   |--- estacion_origen_Postobon <= 0.500
+|   |   |   |   |   |   |   |   |--- class: media
+|   |   |   |   |   |   |   |--- estacion_origen_Postobon >  0.500
+|   |   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |   |--- es_festivo >  0.500
+|   |   |   |   |   |   |   |--- class: baja
+|   |   |   |   |   |--- dia_semana_domingo >  0.500
+|   |   |   |   |   |   |--- class: baja
