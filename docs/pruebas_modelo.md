@@ -12,6 +12,7 @@ pip install -r requirements.txt
 python src/ml/arbol.py               # Rol B: escoge la profundidad, entrena y guarda resultados/modelo_arbol.joblib
 python src/ml/extraer_reglas.py      # Rol B: crea docs/reglas_aprendidas.txt
 python src/ml/evaluacion.py          # Rol C: métricas, validación cruzada, comparación e integración
+python src/ml/evaluacion.py --html   # lo mismo, y además abre los resultados en el navegador
 python -m unittest discover -s src/tests -t src     # pruebas automáticas (sin scikit-learn)
 ```
 
@@ -165,6 +166,10 @@ Las reglas tienen sentido. **ML3** y **ML4** dicen que un viaje largo en la hora
 python src/ml/integracion.py --origen "Cuba" --destino "Dosquebradas" --hora 18:00 --dia miercoles
 ```
 
+Con `--html` se abre además una página, con el mismo estilo de la Actividad 1. Muestra el recorrido, la demora esperada y el razonamiento del motor: las reglas escritas a mano en azul, las aprendidas en morado y cada condición marcada con el valor real del viaje.
+
+En consola, la salida es esta:
+
 ```
 RUTA RECOMENDADA  (Intercambiador Cuba -> Intercambiador Dosquebradas, 18:00)
   1. Intercambiador Cuba -> Intercambiador Dosquebradas . R1 ... 40.6 min
@@ -203,12 +208,14 @@ Los dos últimos casos muestran el límite de cargar solo 4 reglas: cubren un te
 | Motor con reglas aprendidas (5) | El motor deduce `nivel_demora`; las reglas de la Actividad 1 (D2) siguen disparándose; si ninguna regla aplica, no hay conclusión; `kb/reglas.py` queda intacto después de inferir. |
 | Selección (3) | Soporte y acierto de una regla; se descartan las reglas que exigen una estación concreta; se ordenan por soporte. |
 
+Además, [`src/tests/test_reporte_ml.py`](../src/tests/test_reporte_ml.py) tiene 9 pruebas de las páginas web. Comprueban que la de evaluación muestra el acierto, la línea base, las 9 celdas de la matriz y la fidelidad. En la de integración comprueban que separa las reglas a mano de las aprendidas y que cada condición queda marcada (✓ o ✗) con el valor real del viaje.
+
 ```
 python -m unittest discover -s src/tests -t src
-Ran 46 tests ... OK
+Ran 55 tests ... OK
 ```
 
-Son 46 pruebas: las 27 de la Actividad 1 siguen pasando y se agregan las 19 nuevas.
+Son 55 pruebas: siguen pasando las 27 de la Actividad 1, y se suman 28 del rol C.
 
 ---
 
