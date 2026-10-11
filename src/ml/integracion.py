@@ -45,7 +45,7 @@ from kb import reglas as kb_reglas
 
 RUTA_REGLAS = RAIZ / "docs" / "reglas_aprendidas.txt"
 RUTA_CSV = RAIZ / "data" / "viajes_megabus.csv"
-ARCHIVO_HTML = "resultado_integracion.html"
+ARCHIVO_HTML = RAIZ / "resultado_integracion.html"
 
 # Columnas de texto que preparacion.py convirtió con get_dummies().
 CATEGORICAS = ["estacion_origen", "estacion_destino", "dia_semana", "clima", "ruta"]

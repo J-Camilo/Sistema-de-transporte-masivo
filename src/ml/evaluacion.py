@@ -22,6 +22,7 @@ e imprime las tablas en Markdown para docs/pruebas_modelo.md.
     python src/ml/evaluacion.py --html   (además abre los resultados en el navegador)
 """
 
+import builtins
 import sys
 from pathlib import Path
 
@@ -48,7 +49,7 @@ CLASES = ["baja", "media", "alta"]
 PROFUNDIDADES = range(3, 13)
 RUTA_MODELO = RAIZ / "resultados" / "modelo_arbol.joblib"
 FIGURAS = RAIZ / "docs" / "figuras"
-ARCHIVO_HTML = "resultado_evaluacion.html"
+ARCHIVO_HTML = RAIZ / "resultado_evaluacion.html"
 PLIEGUES = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEMILLA)
 
 
@@ -177,6 +178,9 @@ def probar_integracion(df_prueba, y_arbol):
 
 def main():
     sys.stdout.reconfigure(encoding="utf-8")
+    con_html = "--html" in sys.argv
+    # Con --html las tablas van a la página web; en la terminal solo queda un resumen corto.
+    print = builtins.print if not con_html else (lambda *a, **k: None)
     df = cargar_datos()
     X_entrena, X_prueba, y_entrena, y_prueba = preparar_datos()
     X, y = pd.concat([X_entrena, X_prueba]), pd.concat([y_entrena, y_prueba])
@@ -217,7 +221,7 @@ def main():
                 [(r["id"], r["descripcion"].removeprefix("Aprendida del árbol: "), n,
                   pct(a / n) if n else "-") for r, n, a in por_regla]))
 
-    if "--html" in sys.argv:
+    if con_html:
         from ml.reporte import guardar_y_abrir, html_evaluacion
         precision, recall, f1, soporte = precision_recall_fscore_support(y_prueba, y_pred, labels=CLASES)
         resultados = {
@@ -231,6 +235,8 @@ def main():
             "por_regla": [(r["id"], r["descripcion"].removeprefix("Aprendida del árbol: "), n,
                            a / n if n else 0) for r, n, a in por_regla],
         }
+        builtins.print(f"\nAcierto del árbol: {pct(acierto)} (línea base {pct(comparacion[0]['prueba'])})"
+                       f" | el motor coincide con el árbol en {iguales} de {viajes} viajes")
         guardar_y_abrir(html_evaluacion(resultados), ARCHIVO_HTML)
 
 
