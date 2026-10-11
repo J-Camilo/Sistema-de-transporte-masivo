@@ -1,5 +1,7 @@
 # Actividad 1 (src/kb, src/engine, src/search, src/main.py): solo biblioteca estandar (3.8+).
-# Actividad 2 (data/ y src/ml/): analisis de datos y arbol de decision.
-pandas
-matplotlib
-scikit-learn
+# Actividades 2 y 3 (data/, src/ml/ y src/cluster/): analisis de datos y aprendizaje.
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.7
+scikit-learn>=1.3
+scipy>=1.10
